@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react'; 
+import api from './api'
+import { useEffect } from 'react';
 
 function App() {
+
+  const [info, setInfo ] = useState({}); 
+  const [dataloaded, setDataloaded] = useState(false);
+
+
+  useEffect(
+    () => {
+      getInfo();
+    },[]
+  )
+
+  const getInfo = () => {
+  
+    api.get("/api/info")
+    .then( (response) => {
+      console.log(response.data);
+
+      const data = response.data; 
+    
+      setInfo(data); 
+      setDataloaded(true);
+
+    }).catch( (error) => {
+
+      console.log(error,";cath error")
+
+    })
+
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+          <h1>Prueba de servidor sencillo para probar autoscaling</h1>
+          { !dataloaded?
+            <h1>descargando ...</h1>:
+            <div>
+              <h2>{info.message}</h2>
+              <h2>{info.message2}</h2>
+            </div>
+          }
+      </div>
   );
+
+
+  
 }
 
 export default App;
